@@ -62,5 +62,12 @@ describe Admin::CategoriesController do
 
     assert_raise(ActiveRecord::RecordNotFound) { Category.find(test_id) }
   end
-  
+
+  it "should load the new category form" do
+    get :new
+    assert_response :success
+    assert_template :new
+    assigns(:categories).should_not be_nil
+    assigns(:category).should_not be_nil
+  end
 end
