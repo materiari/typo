@@ -46,7 +46,7 @@ class Admin::CategoriesController < Admin::BaseController
   end
 
   def save_category
-    if @category.save!
+    if @category.save
       flash[:notice] = _('Category was successfully saved.')
     else
       flash[:error] = _('Category could not be saved.')

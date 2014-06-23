@@ -39,6 +39,25 @@ describe Admin::CategoriesController do
     assert_response :redirect, :action => 'index'
   end
 
+  it "should load the new category form" do
+    get :new
+    assert_response :success
+    assert_template :new
+    assigns(:categories).should_not be_nil
+    assigns(:category).should_not be_nil
+  end
+
+  it 'should handle a failed save gracefully' do
+    my_category = Factory(:category)
+    Category.stub(:find_by_id).and_return(my_category)
+    #which ever form of save they use should fail
+    my_category.stub(:save!).and_raise(ActiveRecord::RecordNotSaved.new 'Bad Save')
+    my_category.stub(:save).and_return(nil)
+    post :edit, :id => my_category.id
+    assert_response :redirect, :action => 'new'
+    expect( subject.request.flash[:error] ).to_not be_nil
+  end
+
   describe "test_destroy with GET" do
     before(:each) do
       test_id = Factory(:category).id
@@ -63,11 +82,4 @@ describe Admin::CategoriesController do
     assert_raise(ActiveRecord::RecordNotFound) { Category.find(test_id) }
   end
 
-  it "should load the new category form" do
-    get :new
-    assert_response :success
-    assert_template :new
-    assigns(:categories).should_not be_nil
-    assigns(:category).should_not be_nil
-  end
 end
