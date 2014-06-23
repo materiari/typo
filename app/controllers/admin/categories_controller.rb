@@ -28,10 +28,16 @@ class Admin::CategoriesController < Admin::BaseController
     @category = Category.find_by_id(params[:id])
     #if they didn't give us one, it's "new"
     @category ||= Category.new
+    if request.post? 
+      return update_category
+    else
+      render 'new'
+    end
+  end
 
+  def update_category
     @category.attributes = params[:category]
-    if request.post?
-      respond_to do |format|
+    respond_to do |format|
         format.html { save_category }
         format.js do 
           @category.save
@@ -40,9 +46,6 @@ class Admin::CategoriesController < Admin::BaseController
           return render(:partial => 'admin/content/categories')
         end
       end
-      return
-    end
-    render 'new'
   end
 
   def save_category
