@@ -3,4 +3,10 @@
 
   <%= render :partial => "form" %>
 
+<!-- end of edit nested -->
+<% end %>
+
+<!-- Admins are allowed to merge -->
+<% if @merge_allowed %>
+     <%=render :partial => "merge"%>
 <% end %>

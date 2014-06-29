@@ -41,25 +41,19 @@ Given /^the blog is set up$/ do
                 :profile_id => 1,
                 :name => 'admin',
                 :state => 'active'})
-end
+  User.create!({:login => 'normal_user',
+                :password => 'aaaaaaaa',
+                :email => 'average_joe@snow.com',
+                :profile_id => 2,
+                :name => 'normal_user',
+                :state => 'active'})
 
-And /^I am logged into the admin panel$/ do
-  visit '/accounts/login'
-  fill_in 'user_login', :with => 'admin'
-  fill_in 'user_password', :with => 'aaaaaaaa'
-  click_button 'Login'
-  if page.respond_to? :should
-    page.should have_content('Login successful')
-  else
-    assert page.has_content?('Login successful')
-  end
 end
 
 # Single-line step scoper
-When /^(.*) within (.*[^:])$/ do |step, parent|
-  with_scope(parent) { When step }
+When /^(.*) within (.*[^:])$/ do |the_step, parent|
+  with_scope(parent) { step the_step }
 end
-
 # Multi-line step scoper
 When /^(.*) within (.*[^:]):$/ do |step, parent, table_or_string|
   with_scope(parent) { When "#{step}:", table_or_string }
