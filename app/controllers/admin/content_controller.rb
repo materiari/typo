@@ -87,6 +87,29 @@ class Admin::ContentController < Admin::BaseController
     end
   end
 
+  def merge
+    return unless(merge_validate)
+    new_article = @article1.merge(@article2)
+    redirect_to :action => 'edit', :id => new_article.id
+  end
+
+  def merge_validate
+    unless (current_user.admin?)
+      return merge_validate_failed 'you are not allowed to perform this action.'
+    end
+    @article1 = Article.find_by_id(params[:id])
+    @article2 =  Article.find_by_id(params[:merge_with])
+    unless( (@article1 and @article2) and (@article1 != @article2))
+      return merge_validate_failed "merge requires 2 different valid Articles"
+    end
+    return true
+  end
+
+  def merge_validate_failed(msg)
+    flash[:error]= _("Merge error: #{msg}")
+    redirect_to :action => 'index' and return nil
+  end
+
   def autosave
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]

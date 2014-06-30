@@ -29,6 +29,9 @@ Factory.sequence :time do |n|
   basetime - n
 end
 
+Factory.sequence :article_id do |n|
+  n
+end
 Factory.define :user do |u|
   u.login { Factory.next(:user) }
   u.email { Factory.next(:user) }

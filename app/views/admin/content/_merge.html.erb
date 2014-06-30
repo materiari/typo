@@ -1,6 +1,5 @@
 <div id="merge_id">
-<%debugger%>
-<%= form_tag({:action => 'merge', :id => @article.id}, {:id => "merge_form"}) do %>
+<%= form_tag({:action => 'merge', :id => @article.id}, {:id => "merge_form",:method => :get}) do %>
   <h4><%= _("Merge Articles") %></h4>
   Article ID
   <%= text_field_tag 'merge_with', nil, :size => 7 %>
