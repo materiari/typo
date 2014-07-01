@@ -630,5 +630,29 @@ describe Article do
     end
 
   end
+  
+  describe "#merge" do
+    before(:each) do
+      @main_article = Factory.create(:article)
+      @second_article = Factory.create(:second_article)
+      @main_content = @main_article.body_and_extended
+      @second_content = @second_article.body_and_extended
+      @merged = @main_article.merge(@second_article)
+    end
+
+    it "should return an article" do
+      @merged.should be_a(Article)
+    end
+
+    it "should combine the contents" do
+      parts = [@main_content, @second_content].flat_map {|x| x.split(/\n?<!--more-->\n?/, 2)}
+      tests = parts.each { |part| part.nil? ? true : (@merged.body =~ /#{part}/ or @merged.extended =~ /#{part}/) }
+      tests.all?.should be == true
+    end
+    it "should pick the author from the main article"
+    it "should pick the title from the main article"
+    it "should combine the comments"
+
+  end
 end
 

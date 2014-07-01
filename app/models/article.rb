@@ -341,6 +341,18 @@ class Article < Content
     end
   end
 
+  def merge(merge_with)
+    merged = self.clone
+    unless self.extended
+      merged.body << merge_with.body
+      merged.extended << merge_with.extended
+    else
+      merged.extended << merge_with.body
+      merged.extended << merge_with.extended
+    end
+    merged
+  end
+
   def interested_users
     User.find_all_by_notify_on_new_articles(true)
   end
