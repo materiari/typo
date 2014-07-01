@@ -207,7 +207,7 @@ Factory.define :comment do |c|
   c.created_at '2005-01-01 02:00:00'
   c.updated_at '2005-01-01 02:00:00'
   c.published_at '2005-01-01 02:00:00'
-  c.guid '12313123123123123'
+  c.guid {Factory(:guid)}
   c.state 'ham'
 end
 
