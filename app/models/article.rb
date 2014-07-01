@@ -350,7 +350,20 @@ class Article < Content
       merged.extended << merge_with.body
       merged.extended << merge_with.extended
     end
+    merged.created_at = Time.now
+    merged.guid = ''
+    merged.create_guid
+
     merged
+  end
+
+  def self.mergeable?(id1, id2)
+    article1 = Article.find_by_id(id1)
+    article2 =  Article.find_by_id(id2)
+    unless( (article1 and article2) and (article1 != article2))
+      return false
+    end
+    true
   end
 
   def interested_users

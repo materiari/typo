@@ -89,7 +89,9 @@ class Admin::ContentController < Admin::BaseController
 
   def merge
     return unless(merge_validate)
-    new_article = @article1.merge(@article2)
+    article1 = Article.find(params[:id])
+    article2 =  Article.find(params[:merge_with])
+    new_article = article1.merge(article2)
     redirect_to :action => 'edit', :id => new_article.id
   end
 
@@ -97,10 +99,8 @@ class Admin::ContentController < Admin::BaseController
     unless (current_user.admin?)
       return merge_validate_failed 'you are not allowed to perform this action.'
     end
-    @article1 = Article.find_by_id(params[:id])
-    @article2 =  Article.find_by_id(params[:merge_with])
-    unless( (@article1 and @article2) and (@article1 != @article2))
-      return merge_validate_failed "merge requires 2 different valid Articles"
+    unless Article.mergeable?(params[:id], params[:merge_with]) 
+      return merge_validate_failed("merge requires 2 different valid Articles")
     end
     return true
   end

@@ -30,6 +30,8 @@ describe Admin::ContentController do
         @new_article = Factory(:article)
         Article.should_receive(:find_by_id).with(@article.id).and_return(@article)
         Article.should_receive(:find_by_id).with(@article2.id).and_return(@article2)
+        Article.should_receive(:find).with(@article.id).and_return(@article)
+        Article.should_receive(:find).with(@article2.id).and_return(@article2)
         @article.should_receive(:merge).with(@article2).and_return(@new_article)
         get :merge, :merge_with => @article2.id, :id => @article.id
       end

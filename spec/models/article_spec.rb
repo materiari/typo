@@ -635,22 +635,37 @@ describe Article do
     before(:each) do
       @main_article = Factory.create(:article)
       @second_article = Factory.create(:second_article)
-      @main_content = @main_article.body_and_extended
-      @second_content = @second_article.body_and_extended
+      @main_copy = @main_article.clone
+      @second_copy = @second_article.clone
       @merged = @main_article.merge(@second_article)
     end
 
     it "should return an article" do
-      @merged.should be_a(Article)
+      @merged.should be_an(Article)
     end
 
     it "should combine the contents" do
-      parts = [@main_content, @second_content].flat_map {|x| x.split(/\n?<!--more-->\n?/, 2)}
-      tests = parts.each { |part| part.nil? ? true : (@merged.body =~ /#{part}/ or @merged.extended =~ /#{part}/) }
-      tests.all?.should be == true
+      parts_to_test = [@main_copy, @second_copy].flat_map do 
+        |copy| copy.body_and_extended.split(/\n?<!--more-->\n?/, 2)
+      end
+      results = parts_to_test.each do
+        |part| part.nil? ? true : (@merged.body =~ /#{part}/ or @merged.extended =~ /#{part}/)
+      end
+      results.all?.should be == true
     end
-    it "should pick the author from the main article"
-    it "should pick the title from the main article"
+
+    it "should pick the author from the main article" do
+      @merged.author.should be == @main_copy.author
+    end
+    it "should pick the title from the main article" do
+      @merged.title.should be == @main_copy.title
+    end
+
+    it "should not keep the GUID or creation dates" do
+      @merged.guid.should_not be == @main_copy.guid
+      @merged.created_at.should_not be == @main_copy.created_at
+    end
+
     it "should combine the comments"
 
   end
