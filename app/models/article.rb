@@ -345,14 +345,29 @@ class Article < Content
     merged = self.clone
     unless self.extended
       merged.body << merge_with.body
-      merged.extended << merge_with.extended
     else
       merged.extended << merge_with.body
-      merged.extended << merge_with.extended
     end
+    merged.extended << merge_with.extended if(merge_with.extended)
     merged.created_at = Time.now
     merged.guid = ''
     merged.create_guid
+
+    merged.comments = self.comments + merge_with.comments
+    merged.comments.each {|c| c.article = merged}
+    merged.save!
+#clone is shallow copy
+    self.comments.update_all(:article_id=>merged)
+    merge_with.comments.update_all(:article_id=>merged)
+
+
+#    self.comments.each {|c| c.article = merged}
+#    merge_with.comments.each {|c| c.article = merged}
+#    merged.save! 
+#    self.save!
+#    merge_with.save!
+    merge_with.delete
+    self.delete
 
     merged
   end

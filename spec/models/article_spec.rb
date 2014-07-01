@@ -635,6 +635,10 @@ describe Article do
     before(:each) do
       @main_article = Factory.create(:article)
       @second_article = Factory.create(:second_article)
+      @main_article.comments << Factory.create(:comment, :article=>@main_article, :body=>"<p>main body 1</p>")
+      @main_article.comments << Factory.create(:comment, :article=>@main_article, :body=>"<p>main body 2</p>")
+      @main_article.comments << Factory.create(:comment, :article=>@main_article, :body=>"<p>main body 3</p>")
+      @second_article.comments << Factory.create(:comment, :article=>@second_article, :body=>"<p>second body 1</p>")
       @main_copy = @main_article.clone
       @second_copy = @second_article.clone
       @merged = @main_article.merge(@second_article)
@@ -666,7 +670,9 @@ describe Article do
       @merged.created_at.should_not be == @main_copy.created_at
     end
 
-    it "should combine the comments"
+    it "should combine the comments" do
+      @merged.comments.count.should be == 4
+    end
 
   end
 end
