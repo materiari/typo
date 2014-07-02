@@ -23,6 +23,9 @@ Given /^I am logged into the admin panel$/ do
 end
 
 Given /^the following articles exist:$/ do |table|
-  Article.create table.hashes
+  Article.create! table.hashes or flunk
 end
 
+Given /^the following comments exist:$/ do |table|
+  Comment.create! table.hashes or flunk
+end
