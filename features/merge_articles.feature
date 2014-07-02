@@ -46,7 +46,8 @@ Feature: Merge Articles
     Then I should see "Merge Articles"
     And I fill in "merge_with" with "3"
     And I press "Merge"
-    And I navigate to "/previews/6"
+    And I am on the home page
+    And I follow "My second article"
     Then I should see "3 comments"
     And I should see "Jeremy"
     And I should see "Andy"
